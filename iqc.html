@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IQC Maker — Dlouis Tools</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
+.bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at top, #1a1a2e 0%, #0a0a0f 70%); }
+.bg::before { content: ''; position: absolute; width: 400px; height: 400px; background: #7c3aed; border-radius: 50%; filter: blur(100px); opacity: 0.15; top: -100px; left: -100px; }
+.navbar { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 14px 20px; }
+.nav-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 16px; text-decoration: none; color: white; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #7c3aed, #06b6d4); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.logo span { background: linear-gradient(90deg, #a78bfa, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.back-btn { color: #888; text-decoration: none; font-size: 13px; font-weight: 600; }
+.back-btn:hover { color: white; }
+.container { max-width: 1000px; margin: 0 auto; padding: 30px 20px 80px; }
+h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 8px; }
+h1 .grad { background: linear-gradient(90deg, #a78bfa, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { color: #888; font-size: 13px; margin-bottom: 30px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 800px) { .grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+.panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 14px; color: white; font-family: inherit; font-size: 14px; outline: none; transition: 0.2s; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+.form-group textarea { resize: vertical; min-height: 100px; font-family: inherit; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #7c3aed, #06b6d4); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(124,58,237,0.4); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn.green { background: linear-gradient(135deg, #10b981, #059669); }
+.preview { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; display: flex; justify-content: center; align-items: center; min-height: 400px; }
+#canvasPreview { max-width: 100%; height: auto; border-radius: 12px; display: none; }
+#canvasPreview.show { display: block; }
+.placeholder { color: #555; text-align: center; font-size: 13px; }
+.placeholder-icon { font-size: 50px; margin-bottom: 12px; opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>DLOUIS TOOLS</span>
+        </a>
+        <a href="index.html" class="back-btn">← Kembali</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>📱 IQC <span class="grad">Maker</span></h1>
+    <p class="subtitle">Bikin quote aesthetic buat feed Instagram kamu. Custom text, warna, ukuran.</p>
+
+    <div class="grid">
+        <div class="panel">
+            <h3>⚙️ Pengaturan</h3>
+            
+            <div class="form-group">
+                <label>Quote / Text</label>
+                <textarea id="quote" placeholder="Tulis quote yang bikin kamu keren...">"Hidup ini sederhana, kita yang bikin rumit."</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Nama / Username</label>
+                <input type="text" id="username" value="@yussxy">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ukuran Canvas</label>
+                    <select id="size">
+                        <option value="1080x1080">Post (1080×1080)</option>
+                        <option value="1080x1920">Story (1080×1920)</option>
+                        <option value="1080x1350">Portrait (1080×1350)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Font Size</label>
+                    <input type="number" id="fontSize" value="60" min="20" max="200">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Warna Background</label>
+                    <input type="color" id="bgColor" value="#0a0a0f" style="height:44px; cursor:pointer;">
+                </div>
+                <div class="form-group">
+                    <label>Warna Text</label>
+                    <input type="color" id="textColor" value="#ffffff" style="height:44px; cursor:pointer;">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Style Background</label>
+                    <select id="bgStyle">
+                        <option value="solid">Solid</option>
+                        <option value="gradient">Gradient</option>
+                        <option value="dark">Dark Overlay</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Font Family</label>
+                    <select id="fontFamily">
+                        <option value="Inter, sans-serif">Sans Serif</option>
+                        <option value="Georgia, serif">Serif</option>
+                        <option value="Courier New, monospace">Monospace</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn" onclick="generateIQC()">🎨 Generate Image</button>
+            <button class="btn green" id="dlBtn" onclick="downloadImage()" disabled>📥 Download PNG</button>
+        </div>
+
+        <div class="panel">
+            <h3>🖼️ Preview</h3>
+            <div class="preview">
+                <div id="placeholder" class="placeholder">
+                    <div class="placeholder-icon">🖼️</div>
+                    Preview bakal muncul di sini...
+                </div>
+                <canvas id="canvasPreview"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ==========================================
+// IQC MAKER - Generate quote image pake Canvas
+// ==========================================
+const canvas = document.getElementById('canvasPreview');
+const ctx = canvas.getContext('2d');
+let generated = false;
+
+function generateIQC() {
+    const quote = document.getElementById('quote').value.trim();
+    const username = document.getElementById('username').value.trim();
+    const size = document.getElementById('size').value.split('x');
+    const fontSize = parseInt(document.getElementById('fontSize').value);
+    const bgColor = document.getElementById('bgColor').value;
+    const textColor = document.getElementById('textColor').value;
+    const bgStyle = document.getElementById('bgStyle').value;
+    const fontFamily = document.getElementById('fontFamily').value;
+
+    if (!quote) return alert('Isi quote dulu bos!');
+
+    const W = parseInt(size[0]);
+    const H = parseInt(size[1]);
+
+    canvas.width = W;
+    canvas.height = H;
+
+    // ====== BACKGROUND ======
+    if (bgStyle === 'gradient') {
+        const grad = ctx.createLinearGradient(0, 0, W, H);
+        grad.addColorStop(0, bgColor);
+        grad.addColorStop(1, '#7c3aed');
+        ctx.fillStyle = grad;
+    } else if (bgStyle === 'dark') {
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, W, H);
+        // Vignette
+        const grad = ctx.createRadialGradient(W/2, H/2, 100, W/2, H/2, W/1.5);
+        grad.addColorStop(0, 'transparent');
+        grad.addColorStop(1, 'rgba(0,0,0,0.8)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+    } else {
+        ctx.fillStyle = bgColor;
+    }
+    ctx.fillRect(0, 0, W, H);
+
+    // ====== DEKORASI ======
+    // Circle accent
+    ctx.beginPath();
+    ctx.arc(W - 100, 100, 80, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(124, 58, 237, 0.15)';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(120, H - 150, 100, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(6, 182, 212, 0.1)';
+    ctx.fill();
+
+    // ====== QUOTE MARK ======
+    ctx.font = `bold ${fontSize * 3}px ${fontFamily}`;
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.textAlign = 'left';
+    ctx.fillText('"', W * 0.08, H * 0.25);
+
+    // ====== TEXT QUOTE ======
+    ctx.font = `bold ${fontSize}px ${fontFamily}`;
+    ctx.fillStyle = textColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Wrap text
+    const maxWidth = W * 0.8;
+    const words = quote.split(' ');
+    const lines = [];
+    let currentLine = '';
+
+    for (let word of words) {
+        const testLine = currentLine + (currentLine ? ' ' : '') + word;
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && currentLine) {
+            lines.push(currentLine);
+            currentLine = word;
+        } else {
+            currentLine = testLine;
+        }
+    }
+    if (currentLine) lines.push(currentLine);
+
+    const lineHeight = fontSize * 1.4;
+    const totalHeight = lines.length * lineHeight;
+    const startY = H / 2 - totalHeight / 2 + lineHeight / 2;
+
+    lines.forEach((line, i) => {
+        ctx.fillText(line, W / 2, startY + i * lineHeight);
+    });
+
+    // ====== USERNAME ======
+    ctx.font = `600 ${fontSize * 0.5}px ${fontFamily}`;
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText(username, W / 2, H - 80);
+
+    // ====== FOOTER ======
+    ctx.font = `500 ${fontSize * 0.35}px ${fontFamily}`;
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.fillText('Made with YussTools', W / 2, H - 40);
+
+    // Show
+    document.getElementById('placeholder').style.display = 'none';
+    canvas.classList.add('show');
+    document.getElementById('dlBtn').disabled = false;
+    generated = true;
+}
+
+function downloadImage() {
+    if (!generated) return;
+    const link = document.createElement('a');
+    link.download = 'iqc-' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+// Auto-generate preview saat pertama kali
+window.addEventListener('load', () => {
+    setTimeout(generateIQC, 300);
+});
+</script>
+
+</body>
+</html>
