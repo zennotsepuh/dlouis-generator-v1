@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Lobby FF/ML — Dlouis Tools</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
+.bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at top, #1a0a0a 0%, #0a0a0f 70%); }
+.bg::before { content: ''; position: absolute; width: 400px; height: 400px; background: #ef4444; border-radius: 50%; filter: blur(100px); opacity: 0.15; top: -100px; left: -100px; }
+.navbar { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 14px 20px; }
+.nav-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 16px; text-decoration: none; color: white; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #7c3aed, #06b6d4); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.logo span { background: linear-gradient(90deg, #a78bfa, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.back-btn { color: #888; text-decoration: none; font-size: 13px; font-weight: 600; }
+.container { max-width: 1000px; margin: 0 auto; padding: 30px 20px 80px; }
+h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 8px; }
+h1 .grad { background: linear-gradient(90deg, #f87171, #ef4444); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { color: #888; font-size: 13px; margin-bottom: 30px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 800px) { .grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+.panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px; }
+.form-group input, .form-group select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 14px; color: white; font-family: inherit; font-size: 14px; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.15); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #ef4444, #dc2626); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(239,68,68,0.4); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn.green { background: linear-gradient(135deg, #10b981, #059669); }
+.preview { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; display: flex; justify-content: center; align-items: center; min-height: 400px; }
+#canvasPreview { max-width: 100%; height: auto; border-radius: 12px; display: none; }
+#canvasPreview.show { display: block; }
+.placeholder { color: #555; text-align: center; font-size: 13px; }
+.placeholder-icon { font-size: 50px; margin-bottom: 12px; opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>DLOUIS TOOLS</span>
+        </a>
+        <a href="index.html" class="back-btn">← Kembali</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>🎮 Fake Lobby <span class="grad">FF/ML</span></h1>
+    <p class="subtitle">Generate fake lobby Free Fire & Mobile Legends. Custom nama, rank, dan skin.</p>
+
+    <div class="grid">
+        <div class="panel">
+            <h3>⚙️ Pengaturan</h3>
+
+            <div class="form-group">
+                <label>Game</label>
+                <select id="game">
+                    <option value="ff">Free Fire</option>
+                    <option value="ml">Mobile Legends</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Nama Player</label>
+                <input type="text" id="playerName" value="YussXyOP">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Level</label>
+                    <input type="number" id="level" value="85">
+                </div>
+                <div class="form-group">
+                    <label>Rank</label>
+                    <select id="rank">
+                        <option>Bronze</option>
+                        <option>Silver</option>
+                        <option>Gold</option>
+                        <option selected>Platinum</option>
+                        <option>Diamond</option>
+                        <option>Heroic</option>
+                        <option>Grandmaster</option>
+                        <option>Epic</option>
+                        <option>Legend</option>
+                        <option>Mythic</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nama Squad / Clan</label>
+                <input type="text" id="squad" value="[YUSS] SQUAD">
+            </div>
+
+            <button class="btn" onclick="generateLobby()">🎨 Generate Lobby</button>
+            <button class="btn green" id="dlBtn" onclick="downloadImage()" disabled>📥 Download PNG</button>
+        </div>
+
+        <div class="panel">
+            <h3>🖼️ Preview</h3>
+            <div class="preview">
+                <div id="placeholder" class="placeholder">
+                    <div class="placeholder-icon">🎮</div>
+                    Preview bakal muncul di sini...
+                </div>
+                <canvas id="canvasPreview"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvasPreview');
+const ctx = canvas.getContext('2d');
+let generated = false;
+
+function generateLobby() {
+    const game = document.getElementById('game').value;
+    const playerName = document.getElementById('playerName').value.trim();
+    const level = document.getElementById('level').value;
+    const rank = document.getElementById('rank').value;
+    const squad = document.getElementById('squad').value.trim();
+
+    const W = 720;
+    const H = 1280;
+    canvas.width = W;
+    canvas.height = H;
+
+    // ====== BG ======
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    if (game === 'ff') {
+        grad.addColorStop(0, '#1a1a2e');
+        grad.addColorStop(0.5, '#16213e');
+        grad.addColorStop(1, '#0f3460');
+    } else {
+        grad.addColorStop(0, '#2a1a3e');
+        grad.addColorStop(0.5, '#1e1b4b');
+        grad.addColorStop(1, '#312e81');
+    }
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // ====== PATTERN ======
+    ctx.globalAlpha = 0.05;
+    for (let i = 0; i < 50; i++) {
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(Math.random() * W, Math.random() * H, Math.random() * 3 + 1, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    // ====== TOP BAR ======
+    ctx.fillStyle = 'rgba(0,0,0,0.4)';
+    ctx.fillRect(0, 0, W, 80);
+
+    // Level
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(60, 40, 22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 16px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(level, 60, 41);
+
+    // Player name
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 26px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(playerName, 100, 48);
+
+    // Squad
+    ctx.fillStyle = '#22d3ee';
+    ctx.font = '600 16px -apple-system, sans-serif';
+    ctx.fillText(squad, 100, 70);
+
+    // Coin icon top right
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(W - 100, 40, 16, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 12px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('$', W - 100, 41);
+
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 18px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('999,999', W - 75, 47);
+
+    // ====== AVATAR BESAR ======
+    const cx = W / 2;
+    const cy = 350;
+
+    // Glow ring
+    ctx.beginPath();
+    ctx.arc(cx, cy, 130, 0, Math.PI * 2);
+    const ringGrad = ctx.createLinearGradient(cx - 130, cy - 130, cx + 130, cy + 130);
+    if (game === 'ff') {
+        ringGrad.addColorStop(0, '#fbbf24');
+        ringGrad.addColorStop(1, '#f97316');
+    } else {
+        ringGrad.addColorStop(0, '#22d3ee');
+        ringGrad.addColorStop(1, '#a78bfa');
+    }
+    ctx.fillStyle = ringGrad;
+    ctx.fill();
+
+    // Avatar circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, 120, 0, Math.PI * 2);
+    ctx.fillStyle = '#1a1a2e';
+    ctx.fill();
+
+    // Avatar initials
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 100px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(playerName.charAt(0).toUpperCase(), cx, cy + 5);
+
+    // ====== RANK BADGE ======
+    const badgeY = 530;
+    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+    ctx.beginPath();
+    ctx.roundRect(cx - 130, badgeY - 30, 260, 60, 30);
+    ctx.fill();
+
+    // Rank icon
+    ctx.fillStyle = game === 'ff' ? '#fbbf24' : '#22d3ee';
+    ctx.font = '28px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('🏆', cx - 110, badgeY);
+
+    // Rank text
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 26px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(rank, cx - 60, badgeY + 2);
+
+    // ====== STATS GRID ======
+    const statsY = 680;
+    const stats = [
+        { label: 'K/D', value: '4.85' },
+        { label: 'Win Rate', value: '78%' },
+        { label: 'Match', value: '1,247' },
+        { label: 'MVP', value: '892' }
+    ];
+
+    const statW = (W - 80) / 2;
+    const statH = 100;
+
+    stats.forEach((s, i) => {
+        const row = Math.floor(i / 2);
+        const col = i % 2;
+        const x = 40 + col * statW;
+        const y = statsY + row * (statH + 15);
+
+        // Card bg
+        ctx.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx.beginPath();
+        ctx.roundRect(x, y, statW - 10, statH, 15);
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Value
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 32px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(s.value, x + (statW - 10) / 2, y + 40);
+
+        // Label
+        ctx.fillStyle = '#888';
+        ctx.font = '600 14px -apple-system, sans-serif';
+        ctx.fillText(s.label, x + (statW - 10) / 2, y + 75);
+    });
+
+    // ====== BOTTOM BUTTONS ======
+    const btnY = H - 180;
+    
+    // Ready button
+    ctx.fillStyle = game === 'ff' ? '#fbbf24' : '#22d3ee';
+    ctx.beginPath();
+    ctx.roundRect(W / 2 - 200, btnY, 400, 80, 20);
+    ctx.fill();
+
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 30px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('▶  READY', W / 2, btnY + 42);
+
+    // Footer
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '500 14px -apple-system, sans-serif';
+    ctx.fillText('Made with YussTools', W / 2, H - 60);
+
+    // Watermark
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate(-Math.PI / 6);
+    ctx.fillStyle = 'rgba(255, 0, 0, 0.08)';
+    ctx.font = 'bold 100px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('FAKE', 0, 0);
+    ctx.restore();
+
+    document.getElementById('placeholder').style.display = 'none';
+    canvas.classList.add('show');
+    document.getElementById('dlBtn').disabled = false;
+    generated = true;
+}
+
+function downloadImage() {
+    if (!generated) return;
+    const link = document.createElement('a');
+    link.download = 'fake-lobby-' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+// RoundRect polyfill
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.beginPath();
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+    };
+}
+
+window.addEventListener('load', () => setTimeout(generateLobby, 300));
+</script>
+
+</body>
+</html>
