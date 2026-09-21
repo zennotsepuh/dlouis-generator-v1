@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fake Dana — Dlouis Tools</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #fff; min-height: 100vh; }
+.bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at top, #0a1a1a 0%, #0a0a0f 70%); }
+.bg::before { content: ''; position: absolute; width: 400px; height: 400px; background: #06b6d4; border-radius: 50%; filter: blur(100px); opacity: 0.15; top: -100px; right: -100px; }
+.navbar { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 14px 20px; }
+.nav-container { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 16px; text-decoration: none; color: white; }
+.logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #7c3aed, #06b6d4); border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.logo span { background: linear-gradient(90deg, #a78bfa, #22d3ee); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.back-btn { color: #888; text-decoration: none; font-size: 13px; font-weight: 600; }
+.container { max-width: 1000px; margin: 0 auto; padding: 30px 20px 80px; }
+h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 8px; }
+h1 .grad { background: linear-gradient(90deg, #22d3ee, #06b6d4); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.subtitle { color: #888; font-size: 13px; margin-bottom: 30px; }
+.grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+@media (min-width: 800px) { .grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 24px; }
+.panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; color: #888; margin-bottom: 6px; }
+.form-group input, .form-group select { width: 100%; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 14px; color: white; font-family: inherit; font-size: 14px; outline: none; }
+.form-group input:focus, .form-group select:focus { border-color: #06b6d4; box-shadow: 0 0 0 3px rgba(6,182,212,0.15); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; margin-top: 8px; }
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(6,182,212,0.4); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn.green { background: linear-gradient(135deg, #10b981, #059669); }
+.preview { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 16px; display: flex; justify-content: center; align-items: center; min-height: 400px; }
+#canvasPreview { max-width: 100%; height: auto; border-radius: 12px; display: none; }
+#canvasPreview.show { display: block; }
+.placeholder { color: #555; text-align: center; font-size: 13px; }
+.placeholder-icon { font-size: 50px; margin-bottom: 12px; opacity: 0.4; }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="index.html" class="logo">
+            <div class="logo-icon">⚡</div>
+            <span>DLOUIS TOOLS</span>
+        </a>
+        <a href="index.html" class="back-btn">← Kembali</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>💰 Fake <span class="grad">Dana</span></h1>
+    <p class="subtitle">Generate screenshot saldo Dana palsu buat konten / prank. Buat hiburan doang!</p>
+
+    <div class="grid">
+        <div class="panel">
+            <h3>⚙️ Pengaturan</h3>
+
+            <div class="form-group">
+                <label>Nama Pemilik</label>
+                <input type="text" id="ownerName" value="Yuss Xy">
+            </div>
+
+            <div class="form-group">
+                <label>Nomor HP</label>
+                <input type="text" id="phone" value="0812-3456-7890">
+            </div>
+
+            <div class="form-group">
+                <label>Saldo (Rp)</label>
+                <input type="number" id="balance" value="9999999">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Waktu</label>
+                    <input type="time" id="time" value="20:45">
+                </div>
+                <div class="form-group">
+                    <label>Provider</label>
+                    <input type="text" id="provider" value="Telkomsel">
+                </div>
+            </div>
+
+            <button class="btn" onclick="generateDana()">🎨 Generate Dana</button>
+            <button class="btn green" id="dlBtn" onclick="downloadImage()" disabled>📥 Download PNG</button>
+        </div>
+
+        <div class="panel">
+            <h3>🖼️ Preview</h3>
+            <div class="preview">
+                <div id="placeholder" class="placeholder">
+                    <div class="placeholder-icon">💰</div>
+                    Preview bakal muncul di sini...
+                </div>
+                <canvas id="canvasPreview"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvasPreview');
+const ctx = canvas.getContext('2d');
+let generated = false;
+
+function formatRupiah(n) {
+    return 'Rp' + parseInt(n).toLocaleString('id-ID');
+}
+
+function generateDana() {
+    const ownerName = document.getElementById('ownerName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const balance = parseInt(document.getElementById('balance').value) || 0;
+    const time = document.getElementById('time').value;
+    const provider = document.getElementById('provider').value.trim();
+
+    const W = 720;
+    const H = 1280;
+    canvas.width = W;
+    canvas.height = H;
+
+    // ====== BG ======
+    ctx.fillStyle = '#f5f5f5';
+    ctx.fillRect(0, 0, W, H);
+
+    // ====== STATUS BAR ======
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, 60);
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 22px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(time, 30, 40);
+    
+    // Battery + signal
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#000';
+    ctx.font = '600 18px -apple-system, sans-serif';
+    ctx.fillText(provider + ' 4G ▮▮▮ 🔋', W - 30, 40);
+
+    // ====== HEADER DANA ======
+    const headerGrad = ctx.createLinearGradient(0, 60, 0, 500);
+    headerGrad.addColorStop(0, '#0d6b3e');
+    headerGrad.addColorStop(1, '#0a8f4a');
+    ctx.fillStyle = headerGrad;
+    ctx.fillRect(0, 60, W, 440);
+
+    // Logo DANA
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 40px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('DANA', 40, 140);
+
+    // Bullet online
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.beginPath();
+    ctx.arc(240, 130, 8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.font = '600 16px -apple-system, sans-serif';
+    ctx.fillText('Premium', 260, 136);
+
+    // Saldo label
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.font = '500 22px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Saldo Tersedia', 40, 250);
+
+    // Saldo besar
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 72px -apple-system, sans-serif';
+    ctx.fillText(formatRupiah(balance), 40, 340);
+
+    // Nomor HP
+    ctx.fillStyle = 'rgba(255,255,255,0.6)';
+    ctx.font = '500 24px -apple-system, sans-serif';
+    ctx.fillText(phone, 40, 390);
+
+    // ====== INFO BOX ======
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(20, 520, W - 40, 100);
+    
+    ctx.fillStyle = '#666';
+    ctx.font = '500 20px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Pemilik Akun', 40, 560);
+
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 26px -apple-system, sans-serif';
+    ctx.fillText(ownerName, 40, 595);
+
+    // Avatar circle
+    ctx.fillStyle = '#0d6b3e';
+    ctx.beginPath();
+    ctx.arc(W - 80, 570, 40, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 32px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(ownerName.charAt(0).toUpperCase(), W - 80, 583);
+
+    // ====== MENU GRID ======
+    const menuY = 660;
+    const menus = [
+        { icon: '➕', label: 'Top Up' },
+        { icon: '💸', label: 'Kirim' },
+        { icon: '📥', label: 'Minta' },
+        { icon: '📱', label: 'Pulsa' }
+    ];
+    const menuW = (W - 80) / 4;
+    
+    menus.forEach((m, i) => {
+        const x = 40 + i * menuW + menuW / 2;
+        
+        // Circle bg
+        ctx.fillStyle = '#f0fdf4';
+        ctx.beginPath();
+        ctx.arc(x, menuY + 40, 35, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Icon
+        ctx.font = '32px -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(m.icon, x, menuY + 52);
+        
+        // Label
+        ctx.fillStyle = '#333';
+        ctx.font = '600 16px -apple-system, sans-serif';
+        ctx.fillText(m.label, x, menuY + 110);
+    });
+
+    // ====== TRANSAKSI ======
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(20, 840, W - 40, 300);
+
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 22px -apple-system, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Transaksi Terakhir', 40, 880);
+
+    const trx = [
+        { name: 'Transfer ke Andi', amount: '-Rp50.000', color: '#e74c3c' },
+        { name: 'Top Up dari Budi', amount: '+Rp150.000', color: '#0d6b3e' },
+        { name: 'Pembayaran Toko', amount: '-Rp25.000', color: '#e74c3c' }
+    ];
+
+    trx.forEach((t, i) => {
+        const y = 930 + i * 65;
+        
+        ctx.fillStyle = '#f0f0f0';
+        ctx.beginPath();
+        ctx.arc(70, y, 24, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#000';
+        ctx.font = '600 20px -apple-system, sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(t.name, 110, y - 5);
+        
+        ctx.fillStyle = '#999';
+        ctx.font = '400 16px -apple-system, sans-serif';
+        ctx.fillText('Hari ini, ' + time, 110, y + 20);
+        
+        ctx.fillStyle = t.color;
+        ctx.font = 'bold 20px -apple-system, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(t.amount, W - 40, y + 5);
+    });
+
+    // ====== FOOTER ======
+    ctx.fillStyle = '#999';
+    ctx.font = '400 14px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('© 2025 DANA Indonesia', W / 2, H - 40);
+
+    // Watermark FAKE
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate(-Math.PI / 6);
+    ctx.fillStyle = 'rgba(255, 0, 0, 0.08)';
+    ctx.font = 'bold 100px -apple-system, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('FAKE', 0, 0);
+    ctx.restore();
+
+    document.getElementById('placeholder').style.display = 'none';
+    canvas.classList.add('show');
+    document.getElementById('dlBtn').disabled = false;
+    generated = true;
+}
+
+function downloadImage() {
+    if (!generated) return;
+    const link = document.createElement('a');
+    link.download = 'fake-dana-' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+window.addEventListener('load', () => setTimeout(generateDana, 300));
+</script>
+
+</body>
+</html>
